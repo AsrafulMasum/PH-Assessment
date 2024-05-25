@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Navigation.css";
 import { Link, NavLink } from "react-router-dom";
 import Button from "./Button";
+import { AuthContext } from "../Provider/AuthProvider";
 
 
 function Navbar() {
+  const {logInWithGoogle} = useContext(AuthContext)
   const navLinks = (
     <>
       <li>
@@ -16,9 +18,40 @@ function Navbar() {
     </>
   );
 
-  const handleLogin = {
-    
-  }
+  const handleGoogle = async () => {
+    try {
+      logInWithGoogle().then((res) => {
+        console.log(res)
+        const user = {
+          email: res?.user?.email,
+          name: res?.user?.displayName,
+          photoURL: res?.user?.photoURL,
+          coins: 50,
+        };
+        // axiosPublic
+        //   .put("/users", user)
+        //   .then((res) => {
+        //     if (
+        //       res?.data?.upsertedCount ||
+        //       res?.data?.modifiedCount ||
+        //       res?.data?.exists
+        //     ) {
+        //       toast.success("Log In Successful.");
+        //       navigate(
+        //         location?.state?.from?.pathname
+        //           ? location?.state?.from?.pathname
+        //           : "/"
+        //       );
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="drawer">
@@ -76,7 +109,7 @@ function Navbar() {
               )}
             </div> */}
             <div className="pl-4 border-l">
-              <div onClick={handleLogin}>
+              <div onClick={handleGoogle}>
               <Button
                 text="Google Login"
                 style="btn border-tertiary hover:border-transparent bg-transparent text-white"
