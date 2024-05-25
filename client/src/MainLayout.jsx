@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 
 function MainLayout() {
-  return <div>
+  return <div className="font-['Poppins']">
     <Navbar />
     <Outlet />
   </div>;
