@@ -21,10 +21,9 @@ function Navbar() {
   const handleGoogle = async () => {
     try {
       logInWithGoogle().then((res) => {
-        console.log(res)
         const user = {
           email: res?.user?.email,
-          name: res?.user?.displayName,
+          displayName: res?.user?.displayName,
           photoURL: res?.user?.photoURL,
           coins: 50,
         };
