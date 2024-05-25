@@ -5,7 +5,7 @@ import { GiCampCookingPot } from "react-icons/gi";
 const Count = () => {
   return (
     <div
-      className="py-2 text-white"
+      className="py-2 text-white pb-10"
     >
       <div className="max-w-screen-xl mx-4 lg:mx-auto my-10 flex justify-center items-center gap-40">
         <div className="flex flex-col justify-center items-center gap-2 font-semibold">

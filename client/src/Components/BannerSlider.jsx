@@ -32,14 +32,16 @@ function BannerSlider() {
         ></div>
             <div className='flex justify-center items-center h-full'>
                 <Swiper autoplay={{
-                    delay: 3000,
+                    delay: 100000,
                     disableOnInteraction: false,
                 }}
                     modules={[Autoplay]}
                     loop={true} className="mySwiper">
-                    <SwiperSlide>
-                        <div className='flex flex-col mx-48'>
-                            <h2 className='text-white text-8xl w-2/3 capitalize'>Unlock The Flavors Of Homemade Goodness</h2>
+                    <SwiperSlide style={{
+                        height: "100vh"
+                    }}>
+                        <div className='flex flex-col mx-10 xl:mx-48 h-full justify-center'>
+                            <h2 className='text-white text-5xl lg:text-6xl xl:text-8xl lg:w-4/5 xl:w-2/3 capitalize'>Unlock The Flavors Of Homemade Goodness</h2>
                             <p className='mt-4 mb-10 w-1/2'>Unleash your inner chef with fresh, flavorful creations. Our recipes cater to every palate and occasion, offering step-by-step guides that make cooking a joyful and nourishing experience for both beginners and seasoned cooks.</p>
                             <div className='flex gap-4'>
                                 <Button text="See Recipes" style="border-none bg-primary text-white px-12 text-lg" />
@@ -48,8 +50,8 @@ function BannerSlider() {
                         </div>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <div className='flex flex-col mx-48'>
-                            <h2 className='text-white text-8xl w-2/3 capitalize'>Spice up your life with our recipes</h2>
+                        <div className='flex flex-col mx-10 xl:mx-48 h-full justify-center'>
+                            <h2 className='text-white text-5xl lg:text-6xl xl:text-8xl lg:w-4/5 xl:w-2/3 capitalize'>Spice up your life with our recipes</h2>
                             <p className='mt-4 mb-10 w-1/2'>Unleash your inner chef with fresh, flavorful creations. Our recipes cater to every palate and occasion, offering step-by-step guides that make cooking a joyful and nourishing experience for both beginners and seasoned cooks.</p>
                             <div className='flex gap-4'>
                                 <Button text="See Recipes" style="border-none bg-primary text-white px-12 text-lg" />
@@ -58,8 +60,8 @@ function BannerSlider() {
                         </div>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <div className='flex flex-col mx-48'>
-                            <h2 className='text-white text-8xl w-2/3 capitalize'>Where every recipe tells a story</h2>
+                        <div className='flex flex-col mx-10 xl:mx-48 h-full justify-center'>
+                            <h2 className='text-white text-5xl lg:text-6xl xl:text-8xl lg:w-4/5 xl:w-2/3 capitalize'>Where every recipe tells a story</h2>
                             <p className='mt-4 mb-10 w-1/2'>Unleash your inner chef with fresh, flavorful creations. Our recipes cater to every palate and occasion, offering step-by-step guides that make cooking a joyful and nourishing experience for both beginners and seasoned cooks.</p>
                             <div className='flex gap-4'>
                                 <Button text="See Recipes" style="border-none bg-primary text-white px-12 text-lg" />
@@ -68,8 +70,8 @@ function BannerSlider() {
                         </div>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <div className='flex flex-col mx-48'>
-                            <h2 className='text-white text-8xl w-2/3 capitalize'>Fueling your passion for cooking</h2>
+                        <div className='flex flex-col mx-10 xl:mx-48 h-full justify-center'>
+                            <h2 className='text-white text-5xl lg:text-6xl xl:text-8xl lg:w-4/5 xl:w-2/3 capitalize'>Fueling your passion for cooking</h2>
                             <p className='mt-4 mb-10 w-1/2'>Unleash your inner chef with fresh, flavorful creations. Our recipes cater to every palate and occasion, offering step-by-step guides that make cooking a joyful and nourishing experience for both beginners and seasoned cooks.</p>
                             <div className='flex gap-4'>
                                 <Button text="See Recipes" style="border-none bg-primary text-white px-12 text-lg" />
