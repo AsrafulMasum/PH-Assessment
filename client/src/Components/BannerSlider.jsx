@@ -32,7 +32,7 @@ function BannerSlider() {
         ></div>
             <div className='flex justify-center items-center h-full'>
                 <Swiper autoplay={{
-                    delay: 1000,
+                    delay: 5000,
                     disableOnInteraction: false,
                 }}
                     modules={[Autoplay]}
