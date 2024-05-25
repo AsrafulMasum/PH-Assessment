@@ -3,7 +3,7 @@ import { FaLinkedin, FaLink, FaFacebook, FaGithub } from "react-icons/fa";
 const Footer = () => {
   return (
     <footer className="bg-neutral text-neutral-content">
-      <div className="max-w-screen-xl mx-auto footer items-center p-4">
+      <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-between gap-10 items-center px-4 py-10">
         <aside className="items-center grid-flow-col">
           <svg
             width="36"
@@ -18,7 +18,7 @@ const Footer = () => {
           </svg>
           <p>Copyright © 2024 - All right reserved by RentHarbor.</p>
         </aside>
-        <nav className="grid-flow-col gap-5 md:place-self-center md:justify-self-end">
+        <nav className="flex justify-center items-center gap-5">
           <a>
             <FaLink className="text-2xl text-primary" />
           </a>

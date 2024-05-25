@@ -108,7 +108,7 @@ function Navbar() {
                 </div>
               )}
             </div> */}
-            <div className="pl-4 border-l">
+            <div className="ml-10">
               <div onClick={handleGoogle}>
               <Button
                 text="Login with Google"
