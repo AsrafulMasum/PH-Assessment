@@ -111,8 +111,8 @@ function Navbar() {
             <div className="pl-4 border-l">
               <div onClick={handleGoogle}>
               <Button
-                text="Google Login"
-                style="btn border-tertiary hover:border-transparent bg-transparent text-white"
+                text="Login with Google"
+                style="btn border-tertiary hover:border-transparent bg-primary text-white"
               />
               </div>
             </div>
