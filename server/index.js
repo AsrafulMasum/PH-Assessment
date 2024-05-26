@@ -121,9 +121,38 @@ app.post("/users", async (req, res) => {
 });
 
 app.get("/recipes", async (req, res) => {
-  const cursor = recipeCollections.find();
-  const result = await cursor.toArray();
-  res.send(result);
+  const { page, category, country, search } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limit = 10;
+  const filter = {};
+  if (category) {
+    filter.category = category;
+  }
+  if (country) {
+    filter.country = country;
+  }
+  if (search) {
+    filter.recipeName = { $regex: search, $options: "i" };
+  }
+  try {
+    const options = {
+      projection: {
+        recipeName: 1,
+        country: 1,
+        creatorEmail: 1,
+        purchased_by: 1,
+        recipeImage: 1,
+        category: 1,
+        _id: 0,
+      },
+    };
+    const cursor = recipeCollections.find(filter, options).skip((pageNumber - 1) * limit).limit(limit);
+    const result = await cursor.toArray();
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
 });
 
 app.get("/recipes/:id", verifyCookie, async (req, res) => {
@@ -133,11 +162,40 @@ app.get("/recipes/:id", verifyCookie, async (req, res) => {
   res.status(201).json(result);
 });
 
-app.post("/recipes", async (req, res) => {
+app.post("/recipes", verifyCookie, async (req, res) => {
   const recipeData = req.body;
   const result = await recipeCollections.insertOne(recipeData);
   res.status(201).json(result);
 });
+
+app.get("/countries", async (req, res) => {
+  try {
+    const uniqueCountries = await recipeCollections.aggregate([
+      { $group: { _id: "$country" } },
+      { $project: { _id: 0, country: "$_id" } }
+    ]).toArray();
+    const countryNames = uniqueCountries.map(country => country.country);
+    res.json(countryNames);
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.get("/categories", async (req, res) => {
+  try {
+    const uniqueCategories = await recipeCollections.aggregate([
+      { $group: { _id: "$category" } },
+      { $project: { _id: 0, category: "$_id" } }
+    ]).toArray();
+    const categoryNames = uniqueCategories.map(category => category.category);
+    res.json(categoryNames);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`server is running on port: ${port}`);

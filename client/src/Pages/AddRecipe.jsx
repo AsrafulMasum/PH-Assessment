@@ -6,6 +6,7 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 import useAuth from "../Hooks/useAuth";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 const imgHostingKey = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const imgHostingApi = `https://api.imgbb.com/1/upload?key=${imgHostingKey}`;
@@ -65,7 +66,7 @@ function AddRecipe() {
       />
 
       {/* form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="w-1/2 mx-auto my-20">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-3/4 md:w-1/2 mx-auto my-20">
         <input
           {...register("recipeName", { required: true })}
           className="w-full h-11 outline-none px-5 bg-white border border-[#D0D0D0] rounded text-black placeholder:text-black"
@@ -132,14 +133,14 @@ function AddRecipe() {
 
         <textarea
           {...register("ingredients", { required: true })}
-          className="w-full h-11 outline-none px-5 mt-4 bg-white border border-[#D0D0D0] rounded pt-[9px] text-black placeholder:text-black"
+          className="w-full h-20 md:h-11 outline-none px-5 mt-4 bg-white border border-[#D0D0D0] rounded pt-[9px] text-black placeholder:text-black"
           placeholder="Seperate Ingredients with Comma(',') "
           required
         />
 
         <textarea
           {...register("instructions", { required: true })}
-          className="w-full h-11 outline-none px-5 mt-2 bg-white border border-[#D0D0D0] rounded pt-[9px] text-black placeholder:text-black"
+          className="w-full h-20 md:h-11 outline-none px-5 mt-2 bg-white border border-[#D0D0D0] rounded pt-[9px] text-black placeholder:text-black"
           placeholder="Seperate Instructions with Comma(',') "
           required
         />
@@ -152,3 +153,7 @@ function AddRecipe() {
 }
 
 export default AddRecipe;
+
+AddRecipe.propTypes = {
+  children: PropTypes.node,
+};

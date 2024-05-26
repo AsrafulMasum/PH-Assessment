@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import useLoadSecureData from "../Hooks/useLoadSecureData";
 
 function BannerSlider() {
-  const { user } = useAuth();
+  const { user, handleGoogle } = useAuth();
   const navigate = useNavigate();
 
   const { data: dbUser } = useLoadSecureData(`users/${user?.email}`);
@@ -23,9 +23,13 @@ function BannerSlider() {
   const handleAddRecipe = () => {
     if (dbUser) {
       navigate("/addRecipe");
-    }else{
-
+    } else {
+      handleGoogle();
     }
+  };
+
+  const handleViewRecipes = () => {
+    navigate("/recipes");
   };
 
   return (
@@ -36,6 +40,7 @@ function BannerSlider() {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundBlendMode: "overlay",
+        position: "relative",
       }}
     >
       <div
@@ -74,10 +79,12 @@ function BannerSlider() {
                 experience for both beginners and seasoned cooks.
               </p>
               <div className="flex gap-4">
-                <Button
-                  text="See Recipes"
-                  style="border-none bg-primary text-white px-6 text-lg"
-                />
+                <div onClick={handleViewRecipes}>
+                  <Button
+                    text="View Recipes"
+                    style="border-none bg-primary text-white px-6 text-lg"
+                  />
+                </div>
                 <button
                   onClick={handleAddRecipe}
                   className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
@@ -103,11 +110,16 @@ function BannerSlider() {
                 experience for both beginners and seasoned cooks.
               </p>
               <div className="flex gap-4">
-                <Button
-                  text="See Recipes"
-                  style="border-none bg-primary text-white px-6 text-lg"
-                />
-                <button className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary">
+                <div onClick={handleViewRecipes}>
+                  <Button
+                    text="View Recipes"
+                    style="border-none bg-primary text-white px-6 text-lg"
+                  />
+                </div>
+                <button
+                  onClick={handleAddRecipe}
+                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                >
                   Add Recipes
                 </button>
               </div>
@@ -129,11 +141,16 @@ function BannerSlider() {
                 experience for both beginners and seasoned cooks.
               </p>
               <div className="flex gap-4">
-                <Button
-                  text="See Recipes"
-                  style="border-none bg-primary text-white px-6 text-lg"
-                />
-                <button className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary">
+                <div onClick={handleViewRecipes}>
+                  <Button
+                    text="View Recipes"
+                    style="border-none bg-primary text-white px-6 text-lg"
+                  />
+                </div>
+                <button
+                  onClick={handleAddRecipe}
+                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                >
                   Add Recipes
                 </button>
               </div>
@@ -155,11 +172,16 @@ function BannerSlider() {
                 experience for both beginners and seasoned cooks.
               </p>
               <div className="flex gap-4">
-                <Button
-                  text="See Recipes"
-                  style="border-none bg-primary text-white px-6 text-lg"
-                />
-                <button className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary">
+                <div onClick={handleViewRecipes}>
+                  <Button
+                    text="View Recipes"
+                    style="border-none bg-primary text-white px-6 text-lg"
+                  />
+                </div>
+                <button
+                  onClick={handleAddRecipe}
+                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                >
                   Add Recipes
                 </button>
               </div>
