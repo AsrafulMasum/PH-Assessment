@@ -81,6 +81,44 @@ app.get("/", (req, res) => {
   res.send("server is running data will be appear soon...");
 });
 
+// users api method
+app.get("/users", async (req, res) => {
+  const cursor = usersCollections.find();
+  const result = await cursor.toArray();
+  res.send(result);
+});
+
+app.get("/users/:email", async (req, res) => {
+  const userEmail = req.params.email;
+  const query = { email: userEmail };
+  const result = await usersCollections.findOne(query);
+  res.send(result);
+});
+
+app.post("/users", async (req, res) => {
+  try {
+    const user = req.body;
+    console.log(user);
+    if (user) {
+      const existingUser = await usersCollections.findOne({
+        email: user.email,
+      });
+      console.log("Existing user:", existingUser);
+      console.log(user)
+      if (existingUser) {
+          return res.json({ exists: true}); 
+        } else {
+          const result = await usersCollections.insertOne(user);
+          res.status(201).json(result);
+        }
+    }
+  } catch (error) {
+    // Catch and log any error that occurs during the process
+    console.error("Error inserting user: ", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`server is running on port: ${port}`);
 });

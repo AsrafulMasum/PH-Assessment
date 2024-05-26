@@ -1,23 +1,40 @@
-import React, { useContext } from "react";
 import "./Navigation.css";
 import { Link, NavLink } from "react-router-dom";
 import Button from "./Button";
-import { AuthContext } from "../Provider/AuthProvider";
-
+import useAuth from "../Hooks/useAuth";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { toast } from "react-toastify";
+import useLoadSecureData from "../Hooks/useLoadSecureData";
 
 function Navbar() {
-  const {logInWithGoogle} = useContext(AuthContext)
+  const { logInWithGoogle, user, logOut } = useAuth();
+  const axiosPublic = useAxiosPublic();
+
+  const { data: dbUser } = useLoadSecureData(`users/${user?.email}`);
+  console.log(dbUser);
+
   const navLinks = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to="/about">Recipes</NavLink>
+        <NavLink to="/recipe">Recipes</NavLink>
       </li>
+      {dbUser && (
+        <li>
+          <NavLink to="/addRecipe">Add Recipes</NavLink>
+        </li>
+      )}
+      {dbUser && (
+        <li>
+          <NavLink to="/payment">{dbUser?.coins} Coins</NavLink>
+        </li>
+      )}
     </>
   );
 
+  // google signin
   const handleGoogle = async () => {
     try {
       logInWithGoogle().then((res) => {
@@ -27,29 +44,30 @@ function Navbar() {
           photoURL: res?.user?.photoURL,
           coins: 50,
         };
-        // axiosPublic
-        //   .put("/users", user)
-        //   .then((res) => {
-        //     if (
-        //       res?.data?.upsertedCount ||
-        //       res?.data?.modifiedCount ||
-        //       res?.data?.exists
-        //     ) {
-        //       toast.success("Log In Successful.");
-        //       navigate(
-        //         location?.state?.from?.pathname
-        //           ? location?.state?.from?.pathname
-        //           : "/"
-        //       );
-        //     }
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
+        axiosPublic
+          .post("/users", user)
+          .then((res) => {
+            console.log(res?.data);
+            if (res?.data?.insertedId || res?.data?.exists) {
+              toast.success("Log In Successful.");
+              // navigate(
+              //   location?.state?.from?.pathname
+              //     ? location?.state?.from?.pathname
+              //     : "/"
+              // );
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleLogout = () => {
+    logOut().then();
   };
 
   return (
@@ -80,8 +98,8 @@ function Navbar() {
                 </svg>
               </label>
             </div>
-            <div className="flex-1 px-2 mx-2">
-              <Link to="/">Cooking</Link>
+            <div className="flex-1 px-2 mx-2 text-primary font-semibold text-lg">
+              <Link to="/">RecipeRealm</Link>
             </div>
             <div className="flex-none hidden lg:block">
               <ul className="menu menu-horizontal">
@@ -89,31 +107,33 @@ function Navbar() {
                 {navLinks}
               </ul>
             </div>
-            {/* <div className="ml-4 mr-4">
-              {user ? (
-                <UserDropdown></UserDropdown>
+            <div className="ml-4 mr-4">
+              {dbUser ? (
+                <div className="flex justify-center items-center gap-4">
+                  <div>
+                    <img
+                      className="w-10 rounded-full"
+                      src={dbUser?.photoURL}
+                      alt="User Image"
+                    />
+                  </div>
+                  <div onClick={handleLogout}>
+                    <Button
+                      text="Logout"
+                      style="btn px-6 border-tertiary hover:border-transparent bg-primary text-white"
+                    />
+                  </div>
+                </div>
               ) : (
-                // <Link
-                //   to="/login"
-                //   className="btn btn-sm btn-outline text-white px-6 hover:bg-primary hover:border-primary duration-300"
-                // >
-                //   Join Us
-                // </Link>
-                <div onClick={handleNavigate}>
-                  <Button
-                    text="Login"
-                    style="btn btn-sm border-primary hover:border-white bg-transparent text-white"
-                  ></Button>
+                <div className="ml-10">
+                  <div onClick={handleGoogle}>
+                    <Button
+                      text="Login with Google"
+                      style="btn border-tertiary hover:border-transparent bg-primary text-white"
+                    />
+                  </div>
                 </div>
               )}
-            </div> */}
-            <div className="ml-10">
-              <div onClick={handleGoogle}>
-              <Button
-                text="Login with Google"
-                style="btn border-tertiary hover:border-transparent bg-primary text-white"
-              />
-              </div>
             </div>
           </div>
         </div>

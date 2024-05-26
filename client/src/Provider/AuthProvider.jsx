@@ -11,12 +11,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../config/firebase.config";
-// import useAxiosPublic from "../Hooks/useAxiosPublic";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  // const axiosPublic = useAxiosPublic();
+  const axiosPublic = useAxiosPublic();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,34 +40,34 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  // useEffect(() => {
-  //   const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-  //     const userEmail = currentUser?.email || user?.email;
-  //     setUser(currentUser);
-  //     setLoading(false);
-  //     const loggedInUser = { email: userEmail };
-  //     if (currentUser) {
-  //       axiosPublic
-  //         .post("/jwt", loggedInUser, {
-  //           withCredentials: true,
-  //         })
-  //         .then(() => {})
-  //         .catch((err) => {
-  //           console.log(err);
-  //         });
-  //     } else {
-  //       axiosPublic
-  //         .post("/logout", loggedInUser, {
-  //           withCredentials: true,
-  //         })
-  //         .then(() => {})
-  //         .catch((err) => {
-  //           console.log(err);
-  //         });
-  //     }
-  //   });
-  //   return () => unSubscribe();
-  // }, [user, axiosPublic]);
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+      const userEmail = currentUser?.email || user?.email;
+      setUser(currentUser);
+      setLoading(false);
+      const loggedInUser = { email: userEmail };
+      if (currentUser) {
+        axiosPublic
+          .post("/jwt", loggedInUser, {
+            withCredentials: true,
+          })
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        axiosPublic
+          .post("/logout", loggedInUser, {
+            withCredentials: true,
+          })
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
+    return () => unSubscribe();
+  }, [user, axiosPublic]);
 
   const authData = {
     user,

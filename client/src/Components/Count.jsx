@@ -18,14 +18,14 @@ const Count = () => {
         <div className="flex flex-col justify-center items-center gap-2 font-semibold">
           <FaUsers className="text-4xl text-primary" />
           <div className="text-4xl">
-            <CountUp start={0} end={312} duration={2.5} enableScrollSpy  />
+            <CountUp start={0} end={312} duration={2.5}  />
           </div>
           <p>Users</p>
         </div>
         <div className="flex flex-col justify-center items-center gap-2 font-semibold">
           <GiCampCookingPot className="text-4xl text-primary" />
           <div className="text-4xl">
-            <CountUp start={0} end={430} duration={2.5} enableScrollSpy  />
+            <CountUp start={0} end={430} duration={2.5}  />
           </div>
           <p>Recipes</p>
         </div>
