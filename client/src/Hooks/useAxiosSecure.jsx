@@ -10,9 +10,7 @@ const axiosSecure = axios.create({
 });
 
 const useAxiosSecure = () => {
-  const { logOut } = useAuth();
-
-  const navigate = useNavigate();
+  const { logOut, handleGoogle } = useAuth();
 
   useEffect(() => {
     axiosSecure.interceptors.response.use(
@@ -23,7 +21,7 @@ const useAxiosSecure = () => {
         if (err.response.status === 401 || err.response.status === 403) {
           logOut()
             .then(() => {
-              navigate("/logIn");
+              handleGoogle()
             })
             .catch((err) => {
               toast.error(err.message);
@@ -31,7 +29,7 @@ const useAxiosSecure = () => {
         }
       }
     );
-  }, [logOut, navigate]);
+  }, [logOut]);
   return axiosSecure;
 };
 

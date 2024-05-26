@@ -6,11 +6,10 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 import useLoadSecureData from "../Hooks/useLoadSecureData";
 
-function Navbar() {
+function Navbar({ children }) {
   const { handleGoogle, user, logOut } = useAuth();
 
   const { data: dbUser } = useLoadSecureData(`users/${user?.email}`);
-  console.log(dbUser);
 
   const navLinks = (
     <>
@@ -35,7 +34,7 @@ function Navbar() {
 
   // google signin
   const handleGoogleLogin = async () => {
-    handleGoogle()
+    handleGoogle();
   };
 
   const handleLogout = () => {
@@ -109,8 +108,9 @@ function Navbar() {
             </div>
           </div>
         </div>
+
         {/* Page content here */}
-        {/* <div>{children}</div> */}
+        <div>{children}</div>
       </div>
       <div className="drawer-side z-20">
         <label

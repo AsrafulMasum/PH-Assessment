@@ -24,7 +24,7 @@ const Button = ({ text, style, loading }) => {
         type="submit"
         className={`btn py-2 cursor-pointer rounded-lg font-semibold border hover:text-primary duration-500 ${style}`}
       >
-        <span>
+        <span className="flex justify-center items-center">
           {loading ? (
             <TbFidgetSpinner className="animate-spin text-lg" />
           ) : (

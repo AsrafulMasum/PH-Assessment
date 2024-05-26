@@ -56,6 +56,7 @@ dbConnect();
 
 const database = client.db("RecipeRealmDB");
 const usersCollections = database.collection("usersDB");
+const recipeCollections = database.collection("recipeDB");
 
 // jwt api method
 app.post("/jwt", (req, res) => {
@@ -88,7 +89,7 @@ app.get("/users", async (req, res) => {
   res.send(result);
 });
 
-app.get("/users/:email", async (req, res) => {
+app.get("/users/:email", verifyCookie, async (req, res) => {
   const userEmail = req.params.email;
   const query = { email: userEmail };
   const result = await usersCollections.findOne(query);
@@ -104,19 +105,38 @@ app.post("/users", async (req, res) => {
         email: user.email,
       });
       console.log("Existing user:", existingUser);
-      console.log(user)
+      console.log(user);
       if (existingUser) {
-          return res.json({ exists: true}); 
-        } else {
-          const result = await usersCollections.insertOne(user);
-          res.status(201).json(result);
-        }
+        return res.json({ exists: true });
+      } else {
+        const result = await usersCollections.insertOne(user);
+        res.status(201).json(result);
+      }
     }
   } catch (error) {
     // Catch and log any error that occurs during the process
     console.error("Error inserting user: ", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+app.get("/recipes", async (req, res) => {
+  const cursor = recipeCollections.find();
+  const result = await cursor.toArray();
+  res.send(result);
+});
+
+app.get("/recipes/:id", verifyCookie, async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await recipeCollections.findOne(query);
+  res.status(201).json(result);
+});
+
+app.post("/recipes", async (req, res) => {
+  const recipeData = req.body;
+  const result = await recipeCollections.insertOne(recipeData);
+  res.status(201).json(result);
 });
 
 app.listen(port, () => {
