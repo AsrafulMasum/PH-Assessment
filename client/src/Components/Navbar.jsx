@@ -81,7 +81,7 @@ function Navbar() {
               <label
                 htmlFor="my-drawer-3"
                 aria-label="open sidebar"
-                className="btn btn-square btn-ghost"
+                className="btn btn-square btn-ghost pt-[10px]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 :root {
-	--card-height: 40vw;
+	--card-height: 80vw;
 	--card-margin: 4vw;
 	--card-top-offset: 1em;
 	--numcards: 4;
@@ -77,28 +77,10 @@
 	}
 }
 
-/** DEBUG **/
-
-#debug {
-  position: fixed;
-  top: 1em;
-  left: 1em;
-}
-#debug::after {
-  content: " Show Debug";
-  margin-left: 1.5em;
-  color: white;
-  white-space: nowrap;
-}
-
-#debug:checked ~ main {
-  --outline-width: 1px;
-}
-
 
 /** PAGE STYLING **/
 
-* { /* Poor Man's Reset */
+* {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -119,7 +101,7 @@ header {
 #cards {
 	list-style: none;
 	outline: calc(var(--outline-width) * 10) solid blue;
-	
+
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: repeat(var(--numcards), var(--card-height));
@@ -128,6 +110,7 @@ header {
 
 .card {
 	outline: var(--outline-width) solid hotpink;
+	height: 80vh;
 }
 
 .card__content {
@@ -136,6 +119,7 @@ header {
 	color: rgb(10, 5, 7);
 	border-radius: 1em;
 	overflow: hidden;
+	height: 100%;
 
 	display: grid;
 	grid-template-areas: "text img";
@@ -168,21 +152,6 @@ header {
 	object-fit: cover;
 }
 
-h1 {
-	font-weight: 300;
-	font-size: 3.5em;
-}
-
-h2 {
-	font-weight: 300;
-	font-size: 2.5em;
-}
-
-p {
-	font-weight: 400;
-	line-height: 1.42;
-}
-
 .btn {
 	background: #FD6C23;
 	color: rgb(255 255 255);
@@ -200,4 +169,17 @@ aside {
 
 aside p {
 	margin-bottom: 1em;
+}
+
+@media (max-width: 480px) {
+	:root {
+		--card-height: 120vw;
+	}
+
+	.card__content{
+		display: flex;
+		flex-direction: column-reverse;
+		gap: 16px;
+		padding-bottom: 20px;
+	}
 }
