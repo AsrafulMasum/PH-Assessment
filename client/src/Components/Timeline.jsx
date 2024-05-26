@@ -4,7 +4,7 @@ import Title from "./Title";
 function Timeline() {
 
   return (
-    <div className="max-w-screen-xl mx-4 md:mx-8 xl:mx-auto">
+    <div className="max-w-screen-xl mx-4 md:mx-8 xl:mx-auto my-20">
       <Title
         title="Dev Info"
         subTitle="Unveiling My Passions, Skills, and Journey"

@@ -9,8 +9,25 @@ import "swiper/css/pagination";
 // import required modules
 import { Autoplay } from "swiper/modules";
 import Button from "./Button";
+import useAuth from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import useLoadSecureData from "../Hooks/useLoadSecureData";
 
 function BannerSlider() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const { data: dbUser } = useLoadSecureData(`users/${user?.email}`);
+  console.log(dbUser);
+
+  const handleAddRecipe = () => {
+    if (dbUser) {
+      navigate("/addRecipe");
+    }else{
+
+    }
+  };
+
   return (
     <div
       style={{
@@ -48,7 +65,7 @@ function BannerSlider() {
           >
             <div className="flex flex-col mx-10 xl:mx-48 h-full justify-center">
               <h2 className="text-white text-4xl md:text-5xl lg:text-6xl xl:text-8xl md:w-3/4 lg:w-4/5 xl:w-2/3 capitalize">
-              Where taste meets creativity
+                Where taste meets creativity
               </h2>
               <p className="mt-4 mb-10 w-3/4 xl:w-1/2">
                 Unleash your inner chef with fresh, flavorful creations. Our
@@ -61,7 +78,10 @@ function BannerSlider() {
                   text="See Recipes"
                   style="border-none bg-primary text-white px-6 text-lg"
                 />
-                <button className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary">
+                <button
+                  onClick={handleAddRecipe}
+                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                >
                   Add Recipes
                 </button>
               </div>

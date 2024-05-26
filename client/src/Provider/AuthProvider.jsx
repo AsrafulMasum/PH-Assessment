@@ -1,17 +1,15 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
-  GithubAuthProvider,
   GoogleAuthProvider,
-  createUserWithEmailAndPassword,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../config/firebase.config";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
@@ -34,6 +32,38 @@ const AuthProvider = ({ children }) => {
       photoURL: photo,
     });
   };
+
+    // google signin
+    const handleGoogle = async () => {
+      try {
+        logInWithGoogle().then((res) => {
+          const user = {
+            email: res?.user?.email,
+            displayName: res?.user?.displayName,
+            photoURL: res?.user?.photoURL,
+            coins: 50,
+          };
+          axiosPublic
+            .post("/users", user)
+            .then((res) => {
+              console.log(res?.data);
+              if (res?.data?.insertedId || res?.data?.exists) {
+                toast.success("Log In Successful.");
+                // navigate(
+                //   location?.state?.from?.pathname
+                //     ? location?.state?.from?.pathname
+                //     : "/"
+                // );
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   const logOut = () => {
     setLoading(true);
@@ -75,6 +105,7 @@ const AuthProvider = ({ children }) => {
     setLoading,
     logInWithGoogle,
     updateUser,
+    handleGoogle,
     logOut,
   };
   return (

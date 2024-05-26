@@ -3,12 +3,11 @@ import { Link, NavLink } from "react-router-dom";
 import Button from "./Button";
 import useAuth from "../Hooks/useAuth";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
-import { toast } from "react-toastify";
+
 import useLoadSecureData from "../Hooks/useLoadSecureData";
 
 function Navbar() {
-  const { logInWithGoogle, user, logOut } = useAuth();
-  const axiosPublic = useAxiosPublic();
+  const { handleGoogle, user, logOut } = useAuth();
 
   const { data: dbUser } = useLoadSecureData(`users/${user?.email}`);
   console.log(dbUser);
@@ -19,7 +18,7 @@ function Navbar() {
         <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to="/recipe">Recipes</NavLink>
+        <NavLink to="/recipes">Recipes</NavLink>
       </li>
       {dbUser && (
         <li>
@@ -35,35 +34,8 @@ function Navbar() {
   );
 
   // google signin
-  const handleGoogle = async () => {
-    try {
-      logInWithGoogle().then((res) => {
-        const user = {
-          email: res?.user?.email,
-          displayName: res?.user?.displayName,
-          photoURL: res?.user?.photoURL,
-          coins: 50,
-        };
-        axiosPublic
-          .post("/users", user)
-          .then((res) => {
-            console.log(res?.data);
-            if (res?.data?.insertedId || res?.data?.exists) {
-              toast.success("Log In Successful.");
-              // navigate(
-              //   location?.state?.from?.pathname
-              //     ? location?.state?.from?.pathname
-              //     : "/"
-              // );
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  const handleGoogleLogin = async () => {
+    handleGoogle()
   };
 
   const handleLogout = () => {
@@ -126,7 +98,7 @@ function Navbar() {
                 </div>
               ) : (
                 <div className="ml-10">
-                  <div onClick={handleGoogle}>
+                  <div onClick={handleGoogleLogin}>
                     <Button
                       text="Login with Google"
                       style="btn border-tertiary hover:border-transparent bg-primary text-white"
