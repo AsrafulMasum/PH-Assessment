@@ -18,7 +18,6 @@ function BannerSlider() {
   const navigate = useNavigate();
 
   const { data: dbUser } = useLoadSecureData(`users/${user?.email}`);
-  console.log(dbUser);
 
   const handleAddRecipe = () => {
     if (dbUser) {

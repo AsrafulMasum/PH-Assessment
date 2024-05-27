@@ -25,14 +25,6 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateUser = (name, photo) => {
-    setLoading(true);
-    return updateProfile(auth.currentUser, {
-      displayName: name,
-      photoURL: photo,
-    });
-  };
-
     // google signin
     const handleGoogle = async () => {
       try {
@@ -46,7 +38,6 @@ const AuthProvider = ({ children }) => {
           axiosPublic
             .post("/users", user)
             .then((res) => {
-              console.log(res?.data);
               if (res?.data?.insertedId || res?.data?.exists) {
                 toast.success("Log In Successful.");
                 // navigate(
@@ -103,8 +94,6 @@ const AuthProvider = ({ children }) => {
     user,
     loading,
     setLoading,
-    logInWithGoogle,
-    updateUser,
     handleGoogle,
     logOut,
   };

@@ -118,8 +118,8 @@ function AllRecipes() {
       </div>
 
       <ul className="my-10 space-y-10">
-        {recipes?.map((recipe) => (
-          <StackedCard key={recipe?._id} recipe={recipe} />
+        {recipes?.map((recipe, idx) => (
+          <StackedCard key={idx} recipe={recipe} />
         ))}
       </ul>
     </div>

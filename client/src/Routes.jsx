@@ -5,6 +5,9 @@ import AllRecipes from "./Pages/AllRecipes";
 import AddRecipe from "./Pages/AddRecipe";
 import PrivateRoutes from "./PrivateRoutes";
 import ErrorPage from "./Pages/ErrorPage";
+import RecipeDetails from "./Pages/RecipeDetails";
+import CoinsPage from "./Pages/CoinsPage";
+import Payment from "./Pages/Payment";
 
 const Routes = createBrowserRouter([
   {
@@ -27,6 +30,33 @@ const Routes = createBrowserRouter([
         element: (
           <PrivateRoutes>
             <AddRecipe />
+          </PrivateRoutes>
+        ),
+      },
+
+      {
+        path: "/recipeDetails/:id",
+        element: (
+          <PrivateRoutes>
+            <RecipeDetails />
+          </PrivateRoutes>
+        ),
+      },
+
+      {
+        path: "/coins",
+        element: (
+          <PrivateRoutes>
+            <CoinsPage />
+          </PrivateRoutes>
+        ),
+      },
+
+      {
+        path: "/payment",
+        element: (
+          <PrivateRoutes>
+            <Payment />
           </PrivateRoutes>
         ),
       },

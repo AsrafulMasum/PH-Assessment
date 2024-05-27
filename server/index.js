@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.a7zgpzs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -58,7 +59,7 @@ const database = client.db("RecipeRealmDB");
 const usersCollections = database.collection("usersDB");
 const recipeCollections = database.collection("recipeDB");
 
-// jwt api method
+// jwt api methods
 app.post("/jwt", (req, res) => {
   const user = req.body;
   const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -82,7 +83,7 @@ app.get("/", (req, res) => {
   res.send("server is running data will be appear soon...");
 });
 
-// users api method
+// users api methods
 app.get("/users", async (req, res) => {
   const cursor = usersCollections.find();
   const result = await cursor.toArray();
@@ -99,13 +100,11 @@ app.get("/users/:email", verifyCookie, async (req, res) => {
 app.post("/users", async (req, res) => {
   try {
     const user = req.body;
-    console.log(user);
     if (user) {
       const existingUser = await usersCollections.findOne({
         email: user.email,
       });
-      console.log("Existing user:", existingUser);
-      console.log(user);
+
       if (existingUser) {
         return res.json({ exists: true });
       } else {
@@ -120,6 +119,19 @@ app.post("/users", async (req, res) => {
   }
 });
 
+app.put("/updateCoins/:email", verifyCookie, async (req, res) => {
+  const email = req.params.email;
+  const filter = { email: email };
+  const updatedUser = {
+    $set: {
+      coins: req.body.coins,
+    },
+  };
+  const result = await usersCollections.updateOne(filter, updatedUser);
+  res.send(result);
+});
+
+// recipe api methods
 app.get("/recipes", async (req, res) => {
   const { page, category, country, search } = req.query;
   const pageNumber = parseInt(page) || 1;
@@ -143,10 +155,13 @@ app.get("/recipes", async (req, res) => {
         purchased_by: 1,
         recipeImage: 1,
         category: 1,
-        _id: 0,
+        _id: 1,
       },
     };
-    const cursor = recipeCollections.find(filter, options).skip((pageNumber - 1) * limit).limit(limit);
+    const cursor = recipeCollections
+      .find(filter, options)
+      .skip((pageNumber - 1) * limit)
+      .limit(limit);
     const result = await cursor.toArray();
     res.send(result);
   } catch (error) {
@@ -162,19 +177,55 @@ app.get("/recipes/:id", verifyCookie, async (req, res) => {
   res.status(201).json(result);
 });
 
+// app.get("/recipes/:country", verifyCookie, async (req, res) => {
+//   const country = req.params.country;
+//   console.log(country)
+//   const query = { country: { $regex: new RegExp(`^${country}$`, 'i') } };
+//   const result = await recipeCollections.findOne(query);
+//   res.status(201).json(result);
+// });
+
+// app.get("/recipes/:category", verifyCookie, async (req, res) => {
+//   const category = req.params.category;
+//   const query = { category: { $regex: new RegExp(`^${category}$`, 'i') } };
+//   const result = await recipeCollections.findOne(query);
+//   res.status(201).json(result);
+// });
+
 app.post("/recipes", verifyCookie, async (req, res) => {
   const recipeData = req.body;
   const result = await recipeCollections.insertOne(recipeData);
   res.status(201).json(result);
 });
 
+app.put("/updateRecipe/:id", verifyCookie, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const email = req.body.purchasedByEmail;
+
+    const filter = { _id: new ObjectId(id) };
+    const update = {
+      $addToSet: { purchased_by: email },
+    };
+
+    const result = await recipeCollections.updateOne(filter, update);
+    console.log(result)
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 app.get("/countries", async (req, res) => {
   try {
-    const uniqueCountries = await recipeCollections.aggregate([
-      { $group: { _id: "$country" } },
-      { $project: { _id: 0, country: "$_id" } }
-    ]).toArray();
-    const countryNames = uniqueCountries.map(country => country.country);
+    const uniqueCountries = await recipeCollections
+      .aggregate([
+        { $group: { _id: "$country" } },
+        { $project: { _id: 0, country: "$_id" } },
+      ])
+      .toArray();
+    const countryNames = uniqueCountries.map((country) => country.country);
     res.json(countryNames);
   } catch (error) {
     console.error("Error fetching countries:", error);
@@ -184,11 +235,13 @@ app.get("/countries", async (req, res) => {
 
 app.get("/categories", async (req, res) => {
   try {
-    const uniqueCategories = await recipeCollections.aggregate([
-      { $group: { _id: "$category" } },
-      { $project: { _id: 0, category: "$_id" } }
-    ]).toArray();
-    const categoryNames = uniqueCategories.map(category => category.category);
+    const uniqueCategories = await recipeCollections
+      .aggregate([
+        { $group: { _id: "$category" } },
+        { $project: { _id: 0, category: "$_id" } },
+      ])
+      .toArray();
+    const categoryNames = uniqueCategories.map((category) => category.category);
     res.json(categoryNames);
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -196,6 +249,26 @@ app.get("/categories", async (req, res) => {
   }
 });
 
+// payment api method
+app.post("/create-payment-intent", async (req, res) => {
+  try {
+    const { price } = req.body;
+    const amount = parseInt(price * 100);
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: "usd",
+      payment_method_types: ["card"],
+    });
+    
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    console.error("Error creating payment intent:", error);
+    res.status(500).json({ error: "Unable to create payment intent" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`server is running on port: ${port}`);

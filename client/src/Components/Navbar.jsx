@@ -26,7 +26,7 @@ function Navbar({ children }) {
       )}
       {dbUser && (
         <li>
-          <NavLink to="/payment">{dbUser?.coins} Coins</NavLink>
+          <NavLink to="/coins">{dbUser?.coins} Coins</NavLink>
         </li>
       )}
     </>
