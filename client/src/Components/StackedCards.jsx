@@ -1,4 +1,4 @@
-import React from "react";
+
 import "./stackedCards.css";
 import Button from "./Button";
 import Title from "./Title";
