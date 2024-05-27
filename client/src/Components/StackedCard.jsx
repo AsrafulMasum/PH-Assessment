@@ -1,4 +1,3 @@
-
 import Button from "./Button";
 import PropTypes from "prop-types";
 import useAuth from "../Hooks/useAuth";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useLoadSecureData from "../Hooks/useLoadSecureData";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { FcLikePlaceholder } from "react-icons/fc";
 
 function StackedCard({ recipe }) {
   const { user, handleGoogle } = useAuth();
@@ -21,19 +21,21 @@ function StackedCard({ recipe }) {
       `/updateCoins/${dbUser?.email}`,
       updatedUser
     );
+    console.log(res?.data);
     refetch();
   };
 
   const handleUpdateCreatorCoins = async () => {
     const creatorEmail = recipe?.creatorEmail;
-    const creator = await axiosSecure(`users/${creatorEmail}`)
-    const creatorCoins = creator?.coins + 1;
+    const creator = await axiosSecure(`users/${creatorEmail}`);
+    const creatorCoinsNum = creator?.data?.coins;
+    const creatorCoins = parseInt(creatorCoinsNum + 1);
     const updatedCreator = { coins: creatorCoins };
     const creatorRes = await axiosSecure.put(
       `/updateCoins/${creatorEmail}`,
       updatedCreator
     );
-    console.log(creatorRes?.data)
+    console.log(creatorRes?.data);
   };
 
   const handleUpdateRecipe = async () => {
@@ -89,8 +91,20 @@ function StackedCard({ recipe }) {
     }
   };
 
+  const handleReact = async () => {
+    const userEmail = dbUser?.email;
+    const res = await axiosSecure.post(`/addReaction/${recipe?._id}`, {
+      userEmail: [userEmail],
+    });
+    console.log(res.data)
+  };
+
   return (
-    <li>
+    <li className="relative">
+      <FcLikePlaceholder
+        onClick={handleReact}
+        className="absolute top-5 right-5 text-2xl cursor-pointer"
+      />
       <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pb-8 md:pb-0 bg-neutral md:pl-20 rounded-lg">
         <div className="flex-1">
           <h2 className="text-3xl text-white">{recipe?.recipeName}</h2>

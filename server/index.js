@@ -122,9 +122,10 @@ app.post("/users", async (req, res) => {
 app.put("/updateCoins/:email", verifyCookie, async (req, res) => {
   const email = req.params.email;
   const filter = { email: email };
+  const updatedCoins = parseInt(req.body.coins);
   const updatedUser = {
     $set: {
-      coins: req.body.coins,
+      coins: updatedCoins,
     },
   };
   const result = await usersCollections.updateOne(filter, updatedUser);
@@ -177,21 +178,6 @@ app.get("/recipes/:id", verifyCookie, async (req, res) => {
   res.status(201).json(result);
 });
 
-// app.get("/recipes/:country", verifyCookie, async (req, res) => {
-//   const country = req.params.country;
-//   console.log(country)
-//   const query = { country: { $regex: new RegExp(`^${country}$`, 'i') } };
-//   const result = await recipeCollections.findOne(query);
-//   res.status(201).json(result);
-// });
-
-// app.get("/recipes/:category", verifyCookie, async (req, res) => {
-//   const category = req.params.category;
-//   const query = { category: { $regex: new RegExp(`^${category}$`, 'i') } };
-//   const result = await recipeCollections.findOne(query);
-//   res.status(201).json(result);
-// });
-
 app.post("/recipes", verifyCookie, async (req, res) => {
   const recipeData = req.body;
   const result = await recipeCollections.insertOne(recipeData);
@@ -206,10 +192,11 @@ app.put("/updateRecipe/:id", verifyCookie, async (req, res) => {
     const filter = { _id: new ObjectId(id) };
     const update = {
       $addToSet: { purchased_by: email },
+      $inc: { watchCount: 1 },
     };
 
     const result = await recipeCollections.updateOne(filter, update);
-    console.log(result)
+    console.log(result);
     res.json(result);
   } catch (error) {
     console.error("Error updating recipe:", error);
@@ -249,6 +236,25 @@ app.get("/categories", async (req, res) => {
   }
 });
 
+app.post("/addReaction/:id", async (req, res) => {
+  const { id } = req.params;
+  const newReaction = req.body.userEmail;
+  console.log(newReaction)
+
+  try {
+    const filter = { _id: new ObjectId(id) };
+    const updateDocument = {
+      $push: { reactions: { $each: newReaction } },
+    };
+
+    const result = await recipeCollections.updateOne(filter, updateDocument);
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).json({ error: "Unable to update document" });
+  }
+});
+
 // payment api method
 app.post("/create-payment-intent", async (req, res) => {
   try {
@@ -260,7 +266,7 @@ app.post("/create-payment-intent", async (req, res) => {
       currency: "usd",
       payment_method_types: ["card"],
     });
-    
+
     res.json({
       clientSecret: paymentIntent.client_secret,
     });
