@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { FcLikePlaceholder } from "react-icons/fc";
 
-function StackedCard({ recipe }) {
+function StackedCard({ recipe, idx }) {
   const { user, handleGoogle } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
@@ -100,33 +100,35 @@ function StackedCard({ recipe }) {
   };
 
   return (
-    <li className="relative">
-      <FcLikePlaceholder
-        onClick={handleReact}
-        className="absolute top-5 right-5 text-2xl cursor-pointer"
-      />
-      <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pb-8 md:pb-0 bg-neutral md:pl-20 rounded-lg">
-        <div className="flex-1">
-          <h2 className="text-3xl text-white">{recipe?.recipeName}</h2>
-          <div className="leading-normal lg:leading-10">
-            <p>Purchased_by: {recipe?.purchased_by?.length}</p>
-            <p>Creator_Email: {recipe?.creatorEmail}</p>
-            <p>Country: {recipe?.country}</p>
+    <li className="sticky top-10 py-4" id={`card_${idx + 1}`}>
+      <div className="relative">
+        <FcLikePlaceholder
+          onClick={handleReact}
+          className="absolute top-5 right-5 text-2xl cursor-pointer"
+        />
+        <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pb-8 md:pb-0 bg-neutral lg:pl-20 rounded-lg">
+          <div className="flex-1 pl-4 md:py-4">
+            <h2 className="text-3xl text-white">{recipe?.recipeName}</h2>
+            <div className="leading-normal lg:leading-10">
+              <p>Purchased_by: {recipe?.purchased_by?.length}</p>
+              <p>Creator_Email: {recipe?.creatorEmail}</p>
+              <p>Country: {recipe?.country}</p>
+            </div>
+            <div onClick={handleRecipeDetails}>
+              <Button
+                text="View The Recipe"
+                style="border-none px-6 hover:border-2 bg-primary text-white"
+              />
+            </div>
           </div>
-          <div onClick={handleRecipeDetails}>
-            <Button
-              text="View The Recipe"
-              style="border-none px-6 hover:border-2"
+          <figure className="flex-1 h-full">
+            <img
+              className="rounded-t-lg md:rounded-tl-none md:rounded-r-lg"
+              src={recipe?.recipeImage}
+              alt="Image description"
             />
-          </div>
+          </figure>
         </div>
-        <figure className="flex-1">
-          <img
-            className="rounded-r-lg"
-            src={recipe?.recipeImage}
-            alt="Image description"
-          />
-        </figure>
       </div>
     </li>
   );

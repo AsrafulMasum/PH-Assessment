@@ -1,9 +1,44 @@
-
-import "./stackedCards.css";
+import { useEffect } from "react";
 import Button from "./Button";
 import Title from "./Title";
+import useLoadPublicData from "../Hooks/useLoadPublicData";
+import StackedCard from "./StackedCard";
+import { useNavigate } from "react-router-dom";
 
 function StackedCards() {
+  const { data } = useLoadPublicData("/recipes");
+  const recipes = data?.slice(0, 5);
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("scale-animation");
+        } else {
+          entry.target.classList.remove("scale-animation");
+        }
+      });
+    }, observerOptions);
+
+    const cards = document.querySelectorAll(".card__content");
+    cards.forEach((card) => observer.observe(card));
+
+    return () => {
+      cards.forEach((card) => observer.unobserve(card));
+    };
+  }, [recipes]);
+
+  const handleViewAllRecipe = () => {
+    navigate("/recipes")
+  }
+
   return (
     <div className="my-20 max-w-screen-xl mx-4 md:mx-8 xl:mx-auto">
       <Title
@@ -13,121 +48,14 @@ function StackedCards() {
       />
 
       <div className="mt-10">
-        <ul id="cards">
-          <li className="card" id="card_1">
-            <div className="card__content">
-              <div>
-                <h2 className="text-3xl">Spaghetti Carbonara</h2>
-                <div className="leading-normal md:leading-10">
-                  <p>Purchased_by: 20</p>
-                  <p>Creator_Email: m@a.com</p>
-                  <p>Country: Italy</p>
-                </div>
-                <Button
-                  text="View The Recipe"
-                  style="border-none px-6 hover:bg-gray-800"
-                />
-              </div>
-              <figure>
-                <img
-                  src="https://i.postimg.cc/KcBLS5h8/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table.jpg"
-                  alt="Image description"
-                />
-              </figure>
-            </div>
-          </li>
-          <li className="card" id="card_2">
-            <div className="card__content">
-              <div>
-                <h2 className="text-3xl">Spaghetti Carbonara</h2>
-                <div className="leading-normal md:leading-10">
-                  <p>Purchased_by: 20</p>
-                  <p>Creator_Email: m@a.com</p>
-                  <p>Country: Italy</p>
-                </div>
-                <Button
-                  text="View The Recipe"
-                  style="border-none px-6 hover:bg-gray-800"
-                />
-              </div>
-              <figure>
-                <img
-                  src="https://i.postimg.cc/KcBLS5h8/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table.jpg"
-                  alt="Image description"
-                />
-              </figure>
-            </div>
-          </li>
-          <li className="card" id="card_3">
-            <div className="card__content">
-              <div>
-                <h2 className="text-3xl">Spaghetti Carbonara</h2>
-                <div className="leading-normal md:leading-10">
-                  <p>Purchased_by: 20</p>
-                  <p>Creator_Email: m@a.com</p>
-                  <p>Country: Italy</p>
-                </div>
-                <Button
-                  text="View The Recipe"
-                  style="border-none px-6 hover:bg-gray-800"
-                />
-              </div>
-              <figure>
-                <img
-                  src="https://i.postimg.cc/KcBLS5h8/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table.jpg"
-                  alt="Image description"
-                />
-              </figure>
-            </div>
-          </li>
-          <li className="card" id="card_4">
-            <div className="card__content">
-              <div>
-                <h2 className="text-3xl">Spaghetti Carbonara</h2>
-                <div className="leading-normal md:leading-10">
-                  <p>Purchased_by: 20</p>
-                  <p>Creator_Email: m@a.com</p>
-                  <p>Country: Italy</p>
-                </div>
-                <Button
-                  text="View The Recipe"
-                  style="border-none px-6 hover:bg-gray-800"
-                />
-              </div>
-              <figure>
-                <img
-                  src="https://i.postimg.cc/KcBLS5h8/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table.jpg"
-                  alt="Image description"
-                />
-              </figure>
-            </div>
-          </li>
-          <li className="card" id="card_5">
-            <div className="card__content">
-              <div>
-                <h2 className="text-3xl">Spaghetti Carbonara</h2>
-                <div className="leading-normal md:leading-10">
-                  <p>Purchased_by: 20</p>
-                  <p>Creator_Email: m@a.com</p>
-                  <p>Country: Italy</p>
-                </div>
-                <Button
-                  text="View The Recipe"
-                  style="border-none px-6 hover:bg-gray-800"
-                />
-              </div>
-              <figure>
-                <img
-                  src="https://i.postimg.cc/KcBLS5h8/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table.jpg"
-                  alt="Image description"
-                />
-              </figure>
-            </div>
-          </li>
+        <ul id="cards" className="space-y-4">
+          {recipes?.map((recipe, idx) => (
+            <StackedCard key={idx} recipe={recipe} idx={idx} />
+          ))}
         </ul>
-      </div>
-      <div className="flex justify-center items-center">
-        <Button text="View All Recipes" style="btn-wide" />
+        <div onClick={handleViewAllRecipe} className="flex justify-center items-center mt-8">
+          <Button text="View All Recipes" style="btn-wide bg-primary text-white" />
+        </div>
       </div>
     </div>
   );
