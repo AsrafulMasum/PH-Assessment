@@ -138,4 +138,5 @@ export default StackedCard;
 
 StackedCard.propTypes = {
   recipe: PropTypes.object,
+  idx: PropTypes.number,
 };

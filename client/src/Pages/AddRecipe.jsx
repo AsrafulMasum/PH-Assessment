@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Title from "../Components/Title";
 import { useForm } from "react-hook-form";
 import Button from "../Components/Button";
@@ -145,7 +145,7 @@ function AddRecipe() {
           required
         />
         <div className="flex justify-center items-center mt-4">
-          <Button text="Add Recipe" style="btn-wide" loading={loading} />
+          <Button text="Add Recipe" style="btn-wide bg-primary text-white" loading={loading} />
         </div>
       </form>
     </div>

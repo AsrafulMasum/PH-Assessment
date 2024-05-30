@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Title from "../Components/Title";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import StackedCard from "../Components/StackedCard";
@@ -16,26 +16,25 @@ function AllRecipes() {
   const { data: categories } = useLoadPublicData("/categories");
 
   useEffect(() => {
+    const fetchData = async () => {
+      const queryParams = new URLSearchParams({
+        page: page,
+        category: category,
+        country: country,
+        search: searchQuery,
+      }).toString();
+      const res = await axiosPublic(`/recipes?${queryParams}`);
+      const newData = res?.data;
+      setRecipes((prevData) => [...prevData, ...newData]);
+    };
     fetchData();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [page, category, country, searchQuery]);
+  }, [page, category, country, searchQuery, axiosPublic]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const fetchData = async () => {
-    const queryParams = new URLSearchParams({
-      page: page,
-      category: category,
-      country: country,
-      search: searchQuery,
-    }).toString();
-    const res = await axiosPublic(`/recipes?${queryParams}`);
-    const newData = res?.data;
-    setRecipes((prevData) => [...prevData, ...newData]);
-  };
 
   const handleScroll = () => {
     if (
@@ -73,7 +72,9 @@ function AllRecipes() {
       />
       <div className="flex flex-col lg:flex-row justify-center items-center space-x-4 mt-10 gap-4">
         <div className="flex justify-center items-center gap-4">
-          <label className="text-lg" htmlFor="category">Category:</label>
+          <label className="text-lg" htmlFor="category">
+            Category:
+          </label>
           <select
             className="w-full h-11 outline-none px-5 bg-white border border-[#D0D0D0] rounded text-black placeholder:text-black"
             id="category"
@@ -89,7 +90,9 @@ function AllRecipes() {
           </select>
         </div>
         <div className="flex justify-center items-center gap-4">
-          <label className="text-lg" htmlFor="country">Country:</label>
+          <label className="text-lg" htmlFor="country">
+            Country:
+          </label>
           <select
             className="w-full h-11 outline-none px-5 bg-white border border-[#D0D0D0] rounded text-black placeholder:text-black"
             id="country"
@@ -105,7 +108,9 @@ function AllRecipes() {
           </select>
         </div>
         <div className="flex justify-center items-center gap-4">
-          <label className="text-lg" htmlFor="search">Search:</label>
+          <label className="text-lg" htmlFor="search">
+            Search:
+          </label>
           <input
             className="w-full h-11 outline-none px-5 bg-white border border-[#D0D0D0] rounded text-black placeholder:text-black"
             type="text"
