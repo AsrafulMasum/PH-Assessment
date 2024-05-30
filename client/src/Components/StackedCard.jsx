@@ -6,14 +6,14 @@ import { useNavigate } from "react-router-dom";
 import useLoadSecureData from "../Hooks/useLoadSecureData";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { FcLikePlaceholder } from "react-icons/fc";
-import { useState } from "react";
+import { FcLikePlaceholder, FcLike } from "react-icons/fc";
 
-function StackedCard({ recipe, idx }) {
+function StackedCard({ recipe, idx, fetchData }) {
   const { user, handleGoogle } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const { data: dbUser, refetch } = useLoadSecureData(`users/${user?.email}`);
+  const isReacted = recipe?.reactions?.includes(dbUser?.email);
 
   const handleUpdateCoins = async () => {
     const coins = dbUser?.coins - 10;
@@ -93,26 +93,49 @@ function StackedCard({ recipe, idx }) {
   };
 
   const handleReact = async () => {
-    const userEmail = dbUser?.email;
-    if (recipe?.reactions?.includes(userEmail)) {
-      const pullRes = await axiosSecure.post(`/removeReaction/${recipe?._id}`, {
-        userEmail: [userEmail],
-      });
+    if (dbUser?.email) {
+      const userEmail = dbUser?.email;
+
+      if (recipe?.reactions?.includes(userEmail)) {
+        const pullRes = await axiosSecure.post(
+          `/removeReaction/${recipe?._id}`,
+          {
+            userEmail,
+          }
+        );
+        console.log(pullRes?.data);
+        if (pullRes?.data?.modifiedCount) {
+          fetchData();
+        }
+      } else {
+        const res = await axiosSecure.post(`/addReaction/${recipe?._id}`, {
+          userEmail: [userEmail],
+        });
+        console.log(res?.data);
+        if (res?.data?.modifiedCount) {
+          fetchData();
+        }
+      }
     } else {
-      const res = await axiosSecure.post(`/addReaction/${recipe?._id}`, {
-        userEmail: [userEmail],
-      });
+      toast.info("You need to login to react.");
     }
   };
-  
+
   return (
     <li className="sticky top-10 py-4" id={`card_${idx + 1}`}>
       <div className="relative">
-        <FcLikePlaceholder
-          onClick={handleReact}
-          className={`absolute top-5 right-5 text-2xl cursor-pointer`}
-        />
-        <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pb-8 md:pb-0 bg-neutral lg:pl-20 rounded-lg">
+        {isReacted ? (
+          <FcLike
+            onClick={handleReact}
+            className={`absolute top-5 right-5 text-2xl cursor-pointer`}
+          />
+        ) : (
+          <FcLikePlaceholder
+            onClick={handleReact}
+            className={`absolute top-5 right-5 text-2xl cursor-pointer`}
+          />
+        )}
+        <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pb-8 md:pb-0 bg-neutral lg:pl-20 rounded-lg h-[500px] md:h-96 overflow-hidden">
           <div className="flex-1 pl-4 md:py-4">
             <h2 className="text-3xl text-white">{recipe?.recipeName}</h2>
             <div className="leading-normal lg:leading-10">
@@ -127,9 +150,9 @@ function StackedCard({ recipe, idx }) {
               />
             </div>
           </div>
-          <figure className="flex-1 h-full">
+          <figure className="flex-1 h-full object-cover">
             <img
-              className="rounded-t-lg md:rounded-tl-none md:rounded-r-lg"
+              className="rounded-t-lg md:rounded-tl-none md:rounded-r-lg h-full w-full object-cover"
               src={recipe?.recipeImage}
               alt="Image description"
             />
@@ -145,4 +168,5 @@ export default StackedCard;
 StackedCard.propTypes = {
   recipe: PropTypes.object,
   idx: PropTypes.number,
+  fetchData: PropTypes.func,
 };

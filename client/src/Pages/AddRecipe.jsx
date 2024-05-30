@@ -46,6 +46,7 @@ function AddRecipe() {
       creatorEmail: user?.email,
       watchCount: 0,
       purchased_by: [],
+      reactions: [],
     };
 
     // insert data to DB
@@ -66,7 +67,10 @@ function AddRecipe() {
       />
 
       {/* form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="w-3/4 md:w-1/2 mx-auto my-20">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-3/4 md:w-1/2 mx-auto my-20"
+      >
         <input
           {...register("recipeName", { required: true })}
           className="w-full h-11 outline-none px-5 bg-white border border-[#D0D0D0] rounded text-black placeholder:text-black"
@@ -145,7 +149,11 @@ function AddRecipe() {
           required
         />
         <div className="flex justify-center items-center mt-4">
-          <Button text="Add Recipe" style="btn-wide bg-primary text-white" loading={loading} />
+          <Button
+            text="Add Recipe"
+            style="btn-wide bg-primary text-white"
+            loading={loading}
+          />
         </div>
       </form>
     </div>

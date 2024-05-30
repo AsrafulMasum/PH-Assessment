@@ -15,21 +15,22 @@ function AllRecipes() {
   const { data: countries } = useLoadPublicData("/countries");
   const { data: categories } = useLoadPublicData("/categories");
 
+  const fetchData = async () => {
+    const queryParams = new URLSearchParams({
+      page: page,
+      category: category,
+      country: country,
+      search: searchQuery,
+    }).toString();
+    const res = await axiosPublic(`/recipes?${queryParams}`);
+    const newData = res?.data;
+    setRecipes((prevData) => [...prevData, ...newData]);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const queryParams = new URLSearchParams({
-        page: page,
-        category: category,
-        country: country,
-        search: searchQuery,
-      }).toString();
-      const res = await axiosPublic(`/recipes?${queryParams}`);
-      const newData = res?.data;
-      setRecipes((prevData) => [...prevData, ...newData]);
-    };
     fetchData();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [page, category, country, searchQuery, axiosPublic]);
+  }, [page, category, country, searchQuery, fetchData]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -124,7 +125,7 @@ function AllRecipes() {
 
       <ul className="my-10 space-y-10">
         {recipes?.map((recipe, idx) => (
-          <StackedCard key={idx} recipe={recipe} />
+          <StackedCard key={idx} recipe={recipe} idx={idx} fetchData={fetchData} />
         ))}
       </ul>
     </div>

@@ -28,7 +28,7 @@ function CoinsPage() {
       </div>
       <div className="flex flex-col lg:flex-row justify-between items-center gap-10 lg:gap-6 my-20">
         <div onClick={() => handleBuy(1)}
-          className="bg-neutral cursor-pointer lg:w-1/3 px-16 py-10 rounded-lg relative"
+          className="bg-neutral cursor-pointer lg:w-1/3 px-16 py-10 rounded-lg relative h-40"
           style={{
             backgroundImage: `url('https://i.postimg.cc/ZYH1z18j/stack-coins-with-financial-chart.jpg')`,
             backgroundSize: "cover",
@@ -44,7 +44,7 @@ function CoinsPage() {
           </p>
         </div>
         <div onClick={() => handleBuy(2)}
-          className="bg-neutral cursor-pointer lg:w-1/3 px-16 py-10 rounded-lg relative"
+          className="bg-neutral cursor-pointer lg:w-1/3 px-16 py-10 rounded-lg relative h-40"
           style={{
             backgroundImage: `url('https://i.postimg.cc/ZYH1z18j/stack-coins-with-financial-chart.jpg')`,
             backgroundSize: "cover",
@@ -60,7 +60,7 @@ function CoinsPage() {
           </p>
         </div>
         <div onClick={() => handleBuy(3)}
-          className="bg-neutral cursor-pointer lg:w-1/3 px-16 py-10 rounded-lg relative"
+          className="bg-neutral cursor-pointer lg:w-1/3 px-16 py-10 rounded-lg relative h-40"
           style={{
             backgroundImage: `url('https://i.postimg.cc/ZYH1z18j/stack-coins-with-financial-chart.jpg')`,
             backgroundSize: "cover",

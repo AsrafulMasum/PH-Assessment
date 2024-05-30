@@ -6,9 +6,9 @@ import StackedCard from "./StackedCard";
 import { useNavigate } from "react-router-dom";
 
 function StackedCards() {
-  const { data } = useLoadPublicData("/recipes");
+  const { data, refetch } = useLoadPublicData("/recipes");
   const recipes = data?.slice(0, 5);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observerOptions = {
@@ -36,8 +36,8 @@ function StackedCards() {
   }, [recipes]);
 
   const handleViewAllRecipe = () => {
-    navigate("/recipes")
-  }
+    navigate("/recipes");
+  };
 
   return (
     <div className="my-20 max-w-screen-xl mx-4 md:mx-8 xl:mx-auto">
@@ -50,11 +50,22 @@ function StackedCards() {
       <div className="mt-10">
         <ul id="cards" className="space-y-4">
           {recipes?.map((recipe, idx) => (
-            <StackedCard key={idx} recipe={recipe} idx={idx} />
+            <StackedCard
+              key={idx}
+              recipe={recipe}
+              idx={idx}
+              fetchData={refetch}
+            />
           ))}
         </ul>
-        <div onClick={handleViewAllRecipe} className="flex justify-center items-center mt-8">
-          <Button text="View All Recipes" style="btn-wide bg-primary text-white" />
+        <div
+          onClick={handleViewAllRecipe}
+          className="flex justify-center items-center mt-8"
+        >
+          <Button
+            text="View All Recipes"
+            style="btn-wide bg-primary text-white"
+          />
         </div>
       </div>
     </div>

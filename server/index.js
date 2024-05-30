@@ -157,6 +157,7 @@ app.get("/recipes", async (req, res) => {
         recipeImage: 1,
         category: 1,
         _id: 1,
+        reactions: 1,
       },
     };
     const cursor = recipeCollections
@@ -239,7 +240,6 @@ app.get("/categories", async (req, res) => {
 app.post("/addReaction/:id", async (req, res) => {
   const { id } = req.params;
   const newReaction = req.body.userEmail;
-  console.log(newReaction)
 
   try {
     const filter = { _id: new ObjectId(id) };
@@ -272,7 +272,6 @@ app.post("/removeReaction/:id", async (req, res) => {
     res.status(500).json({ error: "Unable to update document" });
   }
 });
-
 
 // payment api method
 app.post("/create-payment-intent", async (req, res) => {
