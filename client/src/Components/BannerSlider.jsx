@@ -1,4 +1,3 @@
-
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -12,7 +11,6 @@ import Button from "./Button";
 import useAuth from "../Hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import useLoadSecureData from "../Hooks/useLoadSecureData";
-import useLoadPublicData from "../Hooks/useLoadPublicData";
 
 function BannerSlider() {
   const { user, handleGoogle } = useAuth();
@@ -113,12 +111,12 @@ function BannerSlider() {
                 <div onClick={handleViewRecipes}>
                   <Button
                     text="View Recipes"
-                    style="border-none bg-primary text-white px-6 text-lg"
+                    style="border-none bg-primary text-white px-6 md:text-lg"
                   />
                 </div>
                 <button
                   onClick={handleAddRecipe}
-                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                  className="text-black hover:border-none md:text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
                 >
                   Add Recipes
                 </button>
@@ -144,12 +142,12 @@ function BannerSlider() {
                 <div onClick={handleViewRecipes}>
                   <Button
                     text="View Recipes"
-                    style="border-none bg-primary text-white px-6 text-lg"
+                    style="border-none bg-primary text-white px-6 md:text-lg"
                   />
                 </div>
                 <button
                   onClick={handleAddRecipe}
-                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                  className="text-black hover:border-none md:text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
                 >
                   Add Recipes
                 </button>
@@ -175,12 +173,12 @@ function BannerSlider() {
                 <div onClick={handleViewRecipes}>
                   <Button
                     text="View Recipes"
-                    style="border-none bg-primary text-white px-6 text-lg"
+                    style="border-none bg-primary text-white px-6 md:text-lg"
                   />
                 </div>
                 <button
                   onClick={handleAddRecipe}
-                  className="text-black hover:border-none text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
+                  className="text-black hover:border-none md:text-lg px-6 bg-white rounded-lg font-semibold hover:text-primary"
                 >
                   Add Recipes
                 </button>

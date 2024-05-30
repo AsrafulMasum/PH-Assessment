@@ -8,11 +8,11 @@ function MainLayout() {
     <div className="font-['Poppins'] relative min-h-screen">
       <ScrollToTop />
       <Navbar>
-        <main className="pb-16">
+        <main className="pb-20">
           <Outlet />
         </main>
       </Navbar>
-      <footer className="absolute bottom-0 w-full">
+      <footer className="absolute bottom-0 w-full mt-20">
         <Footer />
       </footer>
     </div>
