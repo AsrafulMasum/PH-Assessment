@@ -7,6 +7,7 @@ import useLoadSecureData from "../Hooks/useLoadSecureData";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { FcLikePlaceholder } from "react-icons/fc";
+import { useState } from "react";
 
 function StackedCard({ recipe, idx }) {
   const { user, handleGoogle } = useAuth();
@@ -93,18 +94,23 @@ function StackedCard({ recipe, idx }) {
 
   const handleReact = async () => {
     const userEmail = dbUser?.email;
-    const res = await axiosSecure.post(`/addReaction/${recipe?._id}`, {
-      userEmail: [userEmail],
-    });
-    console.log(res.data)
+    if (recipe?.reactions?.includes(userEmail)) {
+      const pullRes = await axiosSecure.post(`/removeReaction/${recipe?._id}`, {
+        userEmail: [userEmail],
+      });
+    } else {
+      const res = await axiosSecure.post(`/addReaction/${recipe?._id}`, {
+        userEmail: [userEmail],
+      });
+    }
   };
-
+  
   return (
     <li className="sticky top-10 py-4" id={`card_${idx + 1}`}>
       <div className="relative">
         <FcLikePlaceholder
           onClick={handleReact}
-          className="absolute top-5 right-5 text-2xl cursor-pointer"
+          className={`absolute top-5 right-5 text-2xl cursor-pointer`}
         />
         <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 md:gap-0 pb-8 md:pb-0 bg-neutral lg:pl-20 rounded-lg">
           <div className="flex-1 pl-4 md:py-4">

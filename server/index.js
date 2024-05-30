@@ -255,6 +255,25 @@ app.post("/addReaction/:id", async (req, res) => {
   }
 });
 
+app.post("/removeReaction/:id", async (req, res) => {
+  const { id } = req.params;
+  const emailToRemove = req.body.userEmail;
+
+  try {
+    const filter = { _id: new ObjectId(id) };
+    const updateDocument = {
+      $pull: { reactions: emailToRemove },
+    };
+
+    const result = await recipeCollections.updateOne(filter, updateDocument);
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).json({ error: "Unable to update document" });
+  }
+});
+
+
 // payment api method
 app.post("/create-payment-intent", async (req, res) => {
   try {
