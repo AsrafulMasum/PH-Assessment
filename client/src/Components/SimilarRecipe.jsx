@@ -52,6 +52,6 @@ function SimilarRecipe({ recipeItem, refetch }) {
 export default SimilarRecipe;
 
 SimilarRecipe.propTypes = {
-  recipeItem: PropTypes.node.isRequired,
-  refetch: PropTypes.node.isRequired,
+  recipeItem: PropTypes.object,
+  refetch: PropTypes.func,
 };
